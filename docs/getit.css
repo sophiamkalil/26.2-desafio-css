@@ -1,80 +1,210 @@
-/*
-Algumas informações úteis e dicas:
-  - Fontes disponíveis:
-    font-family: 'Roboto', sans-serif;
-    font-family: 'Permanent Marker', cursive;
-  - Cores:
-    Tons de amarelo:
-      #e4fc2b
-      #e0d426
-      #f7d736
-      #e0af26
-      #fcb02b
-    Tons de cinza:
-      #2c2c2c
-      #4c4c4c
-    Cores dos cards:
-      #ead3a7
-      #9de0f5
-      #ef89ba
-      #fae890
-      #abe9c1
-  - Sombra: https://codepen.io/sdthornton/pen/wBZdXq
- */
+/* 1. Base: variaveis tornam as cores e sombras reutilizaveis. */
+:root {
+  --yellow: #f7d736;
+  --yellow-dark: #e0af26;
+  --ink: #2c2c2c;
+  --page: #f5f3ec;
+  --shadow: 0 8px 20px rgba(44, 44, 44, 0.12);
+}
 
-html,
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+
 body {
+  min-height: 100vh;
+  color: var(--ink);
+  background: #fff;
   font-family: "Roboto", sans-serif;
+  line-height: 1.5;
 }
 
-/* Você pode usar o CSS comentado abaixo, se ajudar */
-/* Fonte: https://codepen.io/CrisWoler/pen/ogXBLj */
-/* .btn {
+/* 2. Cabecalho */
+.appbar {
   position: relative;
-  display: block;
-  padding: 10px 15px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 96px;
+  padding: 0.85rem 1rem;
+  background: var(--yellow);
+  border-bottom: 4px solid var(--yellow-dark);
+  box-shadow: 0 3px 12px rgba(44, 44, 44, 0.14);
+}
 
+.logo {
+  display: block;
+  width: auto;
+  max-width: 112px;
+  height: 68px;
+  object-fit: contain;
+}
+
+.subtitle { color: #2c2c2c; font-size: 1.25rem; }
+
+/* 3. Conteudo e formulario */
+.container {
+  width: min(1880px, calc(100% - 5rem));
+  margin: 0 auto;
+  padding: 2.5rem 0 4rem;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 700px);
+  margin: 0 auto 3rem;
   overflow: hidden;
-
-  border-width: 0;
-  outline: none;
-  border-radius: 2px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-
-  background-color: #f7d736;
-
-  transition: background-color 0.3s;
+  background: #fff;
+  border: 1px solid rgba(44, 44, 44, 0.12);
+  padding: 0.8rem;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
-.btn > * {
+.form-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(44, 44, 44, 0.18);
+}
+
+.form-card-title,
+.autoresize {
+  width: 100%;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: inherit;
+}
+
+.form-card-title {
+  padding: 0.35rem 0.2rem 0.75rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+.autoresize {
+  min-height: 58px;
+  padding: 0.5rem 0.2rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.form-card-title::placeholder,
+.autoresize::placeholder { color: #99958a; opacity: 1; }
+
+.btn {
+  width: 100%;
+  margin: 0.25rem 0 0;
+  padding: 0.72rem 1.25rem;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(44, 44, 44, 0.18);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.btn:hover {
+  background: #fcb02b;
+  box-shadow: 0 5px 12px rgba(44, 44, 44, 0.22);
+  transform: translateY(-1px);
+}
+
+.btn:focus-visible { outline: 3px solid rgba(44, 44, 44, 0.45); outline-offset: 3px; }
+.btn:active { box-shadow: 0 2px 5px rgba(44, 44, 44, 0.2); transform: translateY(1px); }
+
+/* 4. Grade e cartoes */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.6rem;
+  align-items: start;
+}
+
+.card {
+  --rotation: 0deg;
   position: relative;
+  min-height: 180px;
+  padding: 1.35rem;
+  overflow-wrap: anywhere;
+  background: #fae890;
+  border-radius: 5px;
+  box-shadow: 0 5px 12px rgba(44, 44, 44, 0.15);
+  transform: rotate(var(--rotation));
+  transform-origin: center top;
+  transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
-.btn:before {
-  content: "";
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-
-  display: block;
-  width: 0;
-  padding-top: 0;
-
-  border-radius: 100%;
-
-  background-color: rgba(236, 240, 241, 0.3);
-
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+.card:hover {
+  z-index: 1;
+  box-shadow: 0 12px 24px rgba(44, 44, 44, 0.2);
+  animation: balance 420ms ease-in-out;
 }
 
-.btn:active:before {
-  width: 120%;
-  padding-top: 120%;
+/* O JavaScript sorteia uma destas cinco classes a cada recarregamento. */
+.card-color-1 { background: #ead3a7; }
+.card-color-2 { background: #9de0f5; }
+.card-color-3 { background: #ef89ba; }
+.card-color-4 { background: #fae890; }
+.card-color-5 { background: #abe9c1; }
 
-  transition: width 0.2s ease-out, padding-top 0.2s ease-out;
-} */
+/* O JavaScript tambem sorteia uma inclinacao para cada card. */
+.card-rotation-1 { --rotation: -2.5deg; }
+.card-rotation-2 { --rotation: -2deg; }
+.card-rotation-3 { --rotation: -1.5deg; }
+.card-rotation-4 { --rotation: -1deg; }
+.card-rotation-5 { --rotation: -0.5deg; }
+.card-rotation-6 { --rotation: 0deg; }
+.card-rotation-7 { --rotation: 0.5deg; }
+.card-rotation-8 { --rotation: 1deg; }
+.card-rotation-9 { --rotation: 1.5deg; }
+.card-rotation-10 { --rotation: 2deg; }
+.card-rotation-11 { --rotation: 2.5deg; }
+
+@keyframes balance {
+  0%, 100% { transform: rotate(var(--rotation)) translateY(0); }
+  30% { transform: rotate(calc(var(--rotation) - 2deg)) translateY(-5px); }
+  65% { transform: rotate(calc(var(--rotation) + 2deg)) translateY(-5px); }
+}
+
+.card-title {
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 0;
+  font-family: "Permanent Marker", cursive;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.card-content {
+  color: #4c4c4c;
+  font-family: "Permanent Marker", cursive;
+  font-size: 0.98rem;
+}
+
+/* 5. Responsividade */
+@media (max-width: 600px) {
+  .appbar {
+    position: static;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.8rem 1rem;
+    text-align: center;
+  }
+
+  .subtitle { font-size: 0.82rem; }
+  .container { width: min(100% - 1.25rem, 1120px); padding-top: 1.5rem; }
+  .form-card { margin-bottom: 2rem; }
+  .card-container { grid-template-columns: 1fr; gap: 1rem; }
+  .card { min-height: 170px; }
+}
+
+/* Acessibilidade: remove animacoes se o usuario pedir isso no sistema. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
